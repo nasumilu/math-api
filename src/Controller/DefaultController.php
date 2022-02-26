@@ -15,21 +15,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
 
-    #[Route('/math', name: 'default')]
+    #[Route('/math', name: 'default', methods: ['POST'])]
     public function index(Request $request): Response
     {
-        $results = [
-            'error' => false
-        ];
-        try {
-            $results['results'] = Parser::calculate($request->getContent());
-        } catch (InvalidArgumentException | Exception $ex) {
-            $results = [
-                'error' => true,
-                'message' => $ex->getMessage()
-            ];
-        }
-        return $this->json($results);
-    }
+        $error = false;
+            try {
+                $results = Parser::calculate($request->getContent());
+            } catch (InvalidArgumentException | Exception | \ErrorException $ex) {
+                $error = true;
+                $results = $ex->getMessage();
+            }
 
+        return $this->render('default/math.xml.twig', [
+            'error' => $error,
+            'results' => $results
+        ]);
+    }
+   
 }

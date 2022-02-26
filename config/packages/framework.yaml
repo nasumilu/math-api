@@ -16,6 +16,11 @@ framework:
     #fragments: true
     php_errors:
         log: true
+        
+    http_client:
+        scoped_clients:
+            cognito.client:
+                base_uri: 'https://nasumilu.auth.us-east-1.amazoncognito.com'
 
 when@test:
     framework:

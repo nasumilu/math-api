@@ -7,39 +7,39 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
-use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Aws\CognitoIdentity\CognitoIdentityClient;
-use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
-use Aws\Sdk;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 
-class CognitoAuthenticator extends AbstractAuthenticator //implements AuthenticationEntryPointInterface
+class CognitoAuthenticator extends AbstractAuthenticator
 {
+
+    public function __construct(private CognitoUserProvider $userProvider)
+    {
+        
+    }
 
     public function supports(Request $request): ?bool
     {
-        return false;
+        return false; // disable this Authenticator
+        //return 0 === strpos($request->headers->get('Authorization', ''), 'Bearer');
     }
 
     public function authenticate(Request $request): Passport
     {
-
-        
+        $token = trim(substr($request->headers->get('Authorization', ''), 6));
+        return new SelfValidatingPassport(new UserBadge($token, [$this->userProvider, 'loadUserByIdentifier']));
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        // TODO: Implement onAuthenticationSuccess() method.
+        return null;  
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        // TODO: Implement onAuthenticationFailure() method.
+        return null;
     }
 
-    /* public function start(Request $request, AuthenticationException $authException = null): Response
-      {
 
-
-      } */
 }
