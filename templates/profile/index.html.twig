@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+<div class="container-fluid m-auto w-50">
+    <div class="row row-cols-2 mt-5 mb-1">
+        <h1 class="text-center">Profile</h1>
+
+        <div class="text-end">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ profile }}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="{{ path("app_calculator") }}">Calculator</a></li>
+                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container m-auto w-75" data-controller="calculator">
+
+        <div class="row row-cols-2">
+            {% set image_uri = 'uploads/' ~ (profile.photo is null ? 'profile_avatar.png' : profile.photo) %}
+            <img src="{{ asset(image_uri) }}" class="img-thumbnail" alt="{{ profile.name }}">
+            <div>
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button class="btn btn-primary mt-1">Save</button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

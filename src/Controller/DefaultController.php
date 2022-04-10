@@ -15,8 +15,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
 
-    #[Route('/math', name: 'default', methods: ['POST'])]
-    public function index(Request $request): Response
+    #[Route('/', name: 'app_index', methods: ['GET'])]
+    public function index(): Response
+    {
+        return $this->render('default/index.html.twig');
+    }
+
+    #[Route('/math', name: 'app_math', methods: ['POST'])]
+    public function math(Request $request): Response
     {
         $error = false;
             try {
